@@ -16,7 +16,7 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            overflow: hidden; /* スマホでの不要なスクロールを防止 */
+            overflow-y: auto; /* ボタンが増えた場合のためにスクロールを許可 */
         }
 
         /* アプリケーションのコンテナ */
@@ -155,8 +155,8 @@
         <h1 class="neon-title">酔い度チェック</h1>
         <p style="margin-bottom: 40px; color: #ccc; line-height: 1.8;">
             居酒屋のネオンの下で<br>
-            あなたの酔っ払い度を判定します！<br>
-            直感で答えてね🍻
+            あなたの酔っ払い度を微積で判定します！<br>
+            酔っていても解けるかな？🍻
         </p>
         <button class="btn btn-pink" onclick="startQuiz()">診断スタート！</button>
     </div>
@@ -190,30 +190,93 @@
     // --- 1. 問題データの定義 ---
     const questions = [
         {
-            // 簡単な計算問題
-            text: "簡単な計算問題です。<br><br>「 5 + 7 」の答えは？",
+            text: "第1問（微分）<br><br>f(x) = x<sup>2</sup> の導関数 f'(x) は？",
             choices: [
-                { text: "12", score: 0 },         // 正解
-                { text: "13", score: 1 },         // 少し怪しい
-                { text: "57", score: 2 }          // 明らかにおかしい
+                { text: "2x", score: 0 },
+                { text: "x", score: 1 },
+                { text: "2", score: 1 },
+                { text: "0", score: 2 }
             ]
         },
         {
-            // 色や文字の認識問題
-            text: "色の認識問題です。<br><br>信号機の「止まれ」の色は？",
+            text: "第2問（定積分）<br><br>∫<sub>0</sub><sup>1</sup> 2x dx の値は？",
             choices: [
-                { text: "赤", score: 0 },         // 正解
-                { text: "ピンク", score: 1 },     // 少し怪しい
-                { text: "青（進め！）", score: 2 } // 明らかにおかしい
+                { text: "1", score: 0 },
+                { text: "2", score: 1 },
+                { text: "0", score: 1 },
+                { text: "1/2", score: 2 }
             ]
         },
         {
-            // 反応や記憶を問う問題
-            text: "記憶力の問題です。<br><br>今日、一番最初に何を飲みましたか？",
+            text: "第3問（微分）<br><br>f(x) = sin(x) の導関数 f'(x) は？",
             choices: [
-                { text: "はっきり覚えている", score: 0 }, // 正解
-                { text: "たしかビール…？", score: 1 },   // 少し怪しい
-                { text: "誰だお前は！", score: 2 }        // 明らかにおかしい
+                { text: "cos(x)", score: 0 },
+                { text: "-cos(x)", score: 1 },
+                { text: "sin(x)", score: 1 },
+                { text: "-sin(x)", score: 2 }
+            ]
+        },
+        {
+            text: "第4問（定積分）<br><br>∫<sub>0</sub><sup>π/2</sup> cos(x) dx の値は？",
+            choices: [
+                { text: "1", score: 0 },
+                { text: "0", score: 1 },
+                { text: "-1", score: 1 },
+                { text: "π", score: 2 }
+            ]
+        },
+        {
+            text: "第5問（微分）<br><br>f(x) = e<sup>x</sup> の導関数 f'(x) は？",
+            choices: [
+                { text: "e<sup>x</sup>", score: 0 },
+                { text: "x e<sup>x-1</sup>", score: 1 },
+                { text: "ln(x)", score: 2 },
+                { text: "1", score: 2 }
+            ]
+        },
+        {
+            text: "第6問（定積分）<br><br>∫<sub>1</sub><sup>2</sup> 3x<sup>2</sup> dx の値は？",
+            choices: [
+                { text: "7", score: 0 },
+                { text: "8", score: 1 },
+                { text: "6", score: 1 },
+                { text: "3", score: 2 }
+            ]
+        },
+        {
+            text: "第7問（微分）<br><br>f(x) = ln(x) の導関数 f'(x) は？ (x > 0)",
+            choices: [
+                { text: "1 / x", score: 0 },
+                { text: "e<sup>x</sup>", score: 1 },
+                { text: "1", score: 1 },
+                { text: "x", score: 2 }
+            ]
+        },
+        {
+            text: "第8問（定積分）<br><br>∫<sub>0</sub><sup>1</sup> e<sup>x</sup> dx の値は？",
+            choices: [
+                { text: "e - 1", score: 0 },
+                { text: "e", score: 1 },
+                { text: "1", score: 2 },
+                { text: "e + 1", score: 2 }
+            ]
+        },
+        {
+            text: "第9問（微分）<br><br>f(x) = x<sup>3</sup> - 3x + 2 の導関数 f'(x) は？",
+            choices: [
+                { text: "3x<sup>2</sup> - 3", score: 0 },
+                { text: "3x - 3", score: 1 },
+                { text: "3x<sup>2</sup>", score: 1 },
+                { text: "x<sup>2</sup> - 3", score: 2 }
+            ]
+        },
+        {
+            text: "第10問（定積分）<br><br>∫<sub>-1</sub><sup>1</sup> x<sup>3</sup> dx の値は？",
+            choices: [
+                { text: "0", score: 0 },
+                { text: "1", score: 1 },
+                { text: "1/2", score: 1 },
+                { text: "2", score: 2 }
             ]
         }
     ];
@@ -303,22 +366,22 @@
         const titleEl = document.getElementById('result-title');
         const commentEl = document.getElementById('result-comment');
 
-        // 点数に応じて結果を分岐
-        if (totalScore <= 1) {
+        // 点数に応じて結果を分岐 (10問、最大20点)
+        if (totalScore <= 3) {
             titleEl.innerText = "ほぼ素面です";
             titleEl.style.color = "#00ffff"; // シアン
             titleEl.style.textShadow = "0 0 10px #00ffff, 0 0 20px #00ffff, 0 0 40px #00ffff";
-            commentEl.innerHTML = "まだまだ余裕ですね！✨<br>冷静な判断力があります。";
-        } else if (totalScore <= 3) {
+            commentEl.innerHTML = "シラフで微積ができる！✨<br>まだまだ飲めますね！";
+        } else if (totalScore <= 10) {
             titleEl.innerText = "ほんのり酔ってます";
             titleEl.style.color = "#ffff00"; // イエロー
             titleEl.style.textShadow = "0 0 10px #ffff00, 0 0 20px #ffff00, 0 0 40px #ffff00";
-            commentEl.innerHTML = "いい感じにアルコールが<br>回ってますね🍻<br>そろそろお水を挟むと良いかも！";
+            commentEl.innerHTML = "計算ミスが増えてきましたね🍻<br>そろそろお水を挟むと良いかも！";
         } else {
             titleEl.innerText = "かなり酔ってます";
             titleEl.style.color = "#ff0055"; // レッド/ピンク
             titleEl.style.textShadow = "0 0 10px #ff0055, 0 0 20px #ff0055, 0 0 40px #ff0055";
-            commentEl.innerHTML = "⚠️ 水飲んでください！！！ ⚠️<br>今日はもうお会計して<br>無事に帰りましょう！";
+            commentEl.innerHTML = "⚠️ 水飲んでください！！！ ⚠️<br>数式が宇宙語に見えてませんか？<br>無事に帰りましょう！";
         }
 
         showScreen('result-screen');
