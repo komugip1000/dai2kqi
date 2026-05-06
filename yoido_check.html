@@ -3,307 +3,306 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>酔い度チェック</title>
+    <title>ネオン居酒屋 酔い度チェック</title>
     <style>
-        /* ベーススタイルとネオン居酒屋風の配色 */
+        /* 基本設定：暗めの背景と中央寄せレイアウト */
         body {
+            background-color: #1a1a2e;
+            color: #fff;
+            font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #0b0c10;
-            background-image: radial-gradient(circle at 50% 50%, #1a1a2e 0%, #0b0c10 100%);
-            color: #fff;
-            font-family: 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            overflow-x: hidden;
+            overflow: hidden; /* フェード時のスクロール防止 */
         }
 
-        /* 中央寄せのコンテナ */
         .container {
-            width: 90%;
-            max-width: 400px;
+            width: 100%;
+            max-width: 500px;
+            padding: 20px;
+            box-sizing: border-box;
             text-align: center;
-            padding: 30px 20px;
-            background: rgba(20, 20, 30, 0.8);
-            border-radius: 15px;
-            box-shadow: 0 0 20px rgba(0, 243, 255, 0.2), inset 0 0 10px rgba(255, 0, 85, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         /* ネオンサイン風のタイトル */
         h1 {
-            font-size: 28px;
-            margin-bottom: 20px;
+            font-size: 2.5rem;
             color: #fff;
             text-shadow: 
-                0 0 5px #fff,
-                0 0 10px #fff,
-                0 0 20px #ff0055,
-                0 0 40px #ff0055,
-                0 0 80px #ff0055;
-            animation: flicker 1.5s infinite alternate;
+                0 0 5px #ff2e93, 
+                0 0 10px #ff2e93, 
+                0 0 20px #ff2e93, 
+                0 0 40px #ff2e93;
+            margin-bottom: 20px;
+            font-weight: 900;
+            letter-spacing: 2px;
         }
 
-        /* 問題文のスタイル */
-        #question-text {
-            font-size: 18px;
-            line-height: 1.6;
+        /* 質問テキスト */
+        .question-text {
+            font-size: 1.3rem;
             margin-bottom: 30px;
-            min-height: 80px;
+            min-height: 100px;
+            line-height: 1.6;
         }
 
-        /* 選択肢ボタンのスタイル */
-        .choices {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        button {
+        /* ネオンボタンのスタイル */
+        .neon-btn {
             background: transparent;
-            color: #fff;
-            font-size: 16px;
-            padding: 15px;
-            border: 2px solid #00f3ff;
-            border-radius: 8px;
+            color: #08f7fe;
+            border: 2px solid #08f7fe;
+            border-radius: 12px;
+            padding: 15px 20px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            display: block;
+            width: 100%;
+            margin-bottom: 15px;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 0 10px rgba(0, 243, 255, 0.3), inset 0 0 5px rgba(0, 243, 255, 0.3);
+            box-shadow: 
+                0 0 5px #08f7fe, 
+                inset 0 0 5px #08f7fe;
+            text-shadow: 0 0 2px #08f7fe;
+        }
+
+        .neon-btn:hover, .neon-btn:active {
+            background: #08f7fe;
+            color: #1a1a2e;
+            box-shadow: 
+                0 0 20px #08f7fe, 
+                inset 0 0 10px #08f7fe;
+        }
+
+        /* アクセントカラー用のボタン（スタート画面、結果画面など） */
+        .btn-accent {
+            color: #ff2e93;
+            border-color: #ff2e93;
+            box-shadow: 0 0 5px #ff2e93, inset 0 0 5px #ff2e93;
+            text-shadow: 0 0 2px #ff2e93;
+            margin-top: 20px;
+        }
+        .btn-accent:hover, .btn-accent:active {
+            background: #ff2e93;
+            color: #fff;
+            box-shadow: 0 0 20px #ff2e93, inset 0 0 10px #ff2e93;
+        }
+
+        /* アニメーション用クラス */
+        .fade-out {
+            animation: fadeOut 0.4s forwards;
+        }
+        .fade-in {
+            animation: fadeIn 0.4s forwards;
+        }
+
+        @keyframes fadeOut {
+            from { opacity: 1; transform: translateY(0); }
+            to { opacity: 0; transform: translateY(-20px); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* 診断結果画面のスタイル */
+        .result-title {
+            font-size: 2.2rem;
+            margin-bottom: 20px;
             font-weight: bold;
         }
-
-        button:hover, button:active {
-            background: rgba(0, 243, 255, 0.2);
-            box-shadow: 0 0 20px rgba(0, 243, 255, 0.6), inset 0 0 10px rgba(0, 243, 255, 0.6);
-            transform: scale(1.02);
+        .result-comment {
+            font-size: 1.2rem;
+            margin-bottom: 40px;
+            line-height: 1.6;
+            color: #ddd;
         }
 
-        /* リトライボタン（色を変える） */
-        #retry-btn {
-            border-color: #ffea00;
-            box-shadow: 0 0 10px rgba(255, 234, 0, 0.3), inset 0 0 5px rgba(255, 234, 0, 0.3);
-            margin-top: 20px;
-            width: 100%;
-        }
-
-        #retry-btn:hover, #retry-btn:active {
-            background: rgba(255, 234, 0, 0.2);
-            box-shadow: 0 0 20px rgba(255, 234, 0, 0.6), inset 0 0 10px rgba(255, 234, 0, 0.6);
-        }
-
-        /* 結果表示エリア */
-        #result-area {
-            display: none; /* 初期状態は非表示 */
-        }
-
-        #result-title {
-            font-size: 32px;
-            margin-bottom: 10px;
-            color: #00f3ff;
-            text-shadow: 0 0 10px #00f3ff, 0 0 20px #00f3ff;
-        }
-
-        #result-comment {
-            font-size: 16px;
-            line-height: 1.5;
-            margin-bottom: 30px;
-            color: #ccc;
-        }
-
-        /* フェードアニメーション用クラス */
-        .fade-out {
-            opacity: 0;
-            transform: translateY(-10px);
-            transition: opacity 0.3s ease, transform 0.3s ease;
-        }
-
-        .fade-in {
-            opacity: 1;
-            transform: translateY(0);
-            transition: opacity 0.3s ease, transform 0.3s ease;
-        }
-
-        /* タイトルのちらつきアニメーション */
-        @keyframes flicker {
-            0%, 18%, 22%, 25%, 53%, 57%, 100% {
-                text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 20px #ff0055, 0 0 40px #ff0055;
-            }
-            20%, 24%, 55% {
-                text-shadow: none;
-            }
+        /* 画面切り替え用の非表示クラス */
+        .hidden {
+            display: none;
         }
     </style>
 </head>
 <body>
 
-    <div class="container" id="main-container">
-        <h1>酔い度チェック</h1>
-        
-        <!-- クイズエリア -->
-        <div id="quiz-area" class="fade-in">
-            <div id="question-text">読み込み中...</div>
-            <div class="choices" id="choices-container">
-                <!-- ボタンはJavaScriptで生成 -->
+    <div class="container">
+        <!-- スタート画面 -->
+        <div id="start-screen" class="fade-in">
+            <h1>酔い度チェック</h1>
+            <p style="margin-bottom: 40px; color: #aaa; font-size: 1.1rem;">あなたの今の「酔い度」を<br>サクッと判定します！🍻</p>
+            <button class="neon-btn btn-accent" onclick="startQuiz()">診断スタート！</button>
+        </div>
+
+        <!-- クイズ画面 -->
+        <div id="quiz-screen" class="hidden">
+            <h2 id="quiz-title" style="font-size: 1.4rem; color: #08f7fe; text-shadow: 0 0 10px #08f7fe; margin-bottom: 20px;">第1問</h2>
+            <div id="question-text" class="question-text">ここに問題が表示されます</div>
+            <div id="choices-container">
+                <!-- ボタンがJavaScriptで生成されます -->
             </div>
         </div>
 
-        <!-- 結果表示エリア -->
-        <div id="result-area">
-            <div id="result-title">結果発表</div>
-            <div id="result-comment"></div>
-            <button id="retry-btn" onclick="resetQuiz()">もう一回診断する</button>
+        <!-- 結果画面 -->
+        <div id="result-screen" class="hidden">
+            <h2 style="color: #fff; font-size: 1.2rem; margin-bottom: 10px;">診断結果</h2>
+            <div id="result-title" class="result-title">ここに結果</div>
+            <div id="result-comment" class="result-comment">ここにコメント</div>
+            <button class="neon-btn btn-accent" onclick="resetQuiz()">もう一回診断する</button>
         </div>
     </div>
 
     <script>
-        // --- 問題データの設定 ---
-        // 0点: 正解、1点: 少し怪しい、2点: 明らかにおかしい
+        // --- データ定義 ---
         const questions = [
             {
-                // Q1: 簡単な計算問題
-                text: "【第1問】<br>1000円札を出して、330円のおつまみを買いました。<br>お釣りはいくら？",
+                text: "簡単な計算問題です。<br><br>1000円出して、300円のビールと400円の枝豆を買いました。<br>お釣りはいくら？",
                 choices: [
-                    { text: "670円", points: 0 },
-                    { text: "770円", points: 1 },
-                    { text: "570円", points: 2 }
+                    { text: "300円", score: 0 }, // 正解
+                    { text: "200円", score: 1 }, // 少し怪しい（計算ミス）
+                    { text: "お釣りはいらねぇ！", score: 2 } // 明らかにおかしい
                 ]
             },
             {
-                // Q2: 色や文字の認識問題（ストループ効果の簡単なもの）
-                text: "【第2問】<br><span style='color: #ff0055; font-size: 2em; font-weight: bold; text-shadow: none;'>青</span><br>上の文字は『何色』で書かれていますか？",
+                text: "次の文字の『色』を答えてください。<br><br><span style='color:#ff2e93; font-size:3rem; font-weight:bold; display:block; margin-top:10px;'>青</span>",
                 choices: [
-                    { text: "赤色", points: 0 },
-                    { text: "紫色", points: 1 },
-                    { text: "青色", points: 2 }
+                    { text: "ピンク（赤系）", score: 0 }, // 正解
+                    { text: "青", score: 1 }, // 少し怪しい（文字の意味に釣られている）
+                    { text: "黄色", score: 2 } // 明らかにおかしい
                 ]
             },
             {
-                // Q3: 反応や記憶を問う問題
-                text: "【第3問】<br>右手を上げて、左目を閉じてください。<br>今、開いている目はどっち？",
+                text: "右手を上げて、左目を閉じてください。<br>……そのまま答えてください。<br><br>さて、今何問目ですか？",
                 choices: [
-                    { text: "右目", points: 0 },
-                    { text: "両方開いてる", points: 1 },
-                    { text: "左目", points: 2 }
+                    { text: "3問目", score: 0 }, // 正解
+                    { text: "2問目", score: 1 }, // 少し怪しい（記憶が曖昧）
+                    { text: "もう帰りたい", score: 2 } // 明らかにおかしい（限界）
                 ]
             }
         ];
 
-        // --- 状態管理の変数 ---
-        let currentQuestionIndex = 0; // 現在の問題番号
-        let totalScore = 0;           // 現在の合計スコア
+        // --- 状態管理 ---
+        let currentQuestionIndex = 0;
+        let totalScore = 0;
 
-        // DOM要素の取得
-        const quizArea = document.getElementById('quiz-area');
-        const questionTextElement = document.getElementById('question-text');
+        // --- DOM要素の取得 ---
+        const startScreen = document.getElementById('start-screen');
+        const quizScreen = document.getElementById('quiz-screen');
+        const resultScreen = document.getElementById('result-screen');
+        
+        const quizTitle = document.getElementById('quiz-title');
+        const questionText = document.getElementById('question-text');
         const choicesContainer = document.getElementById('choices-container');
-        const resultArea = document.getElementById('result-area');
-        const resultTitleElement = document.getElementById('result-title');
-        const resultCommentElement = document.getElementById('result-comment');
+        
+        const resultTitle = document.getElementById('result-title');
+        const resultComment = document.getElementById('result-comment');
 
-        // --- クイズの初期化・表示 ---
-        function showQuestion() {
-            // 現在の問題データを取得
-            const currentQuestion = questions[currentQuestionIndex];
+        // --- 関数 ---
+
+        // 画面の切り替え（フェードアニメーション付き）
+        function switchScreen(hideElement, showElement) {
+            hideElement.classList.remove('fade-in');
+            hideElement.classList.add('fade-out');
             
-            // 問題文をセット
-            questionTextElement.innerHTML = currentQuestion.text;
+            setTimeout(() => {
+                hideElement.classList.add('hidden');
+                showElement.classList.remove('hidden', 'fade-out');
+                showElement.classList.add('fade-in');
+            }, 400); // CSSのanimation時間(0.4s)に合わせる
+        }
+
+        // クイズ開始
+        function startQuiz() {
+            currentQuestionIndex = 0;
+            totalScore = 0;
+            displayQuestion();
+            switchScreen(startScreen, quizScreen);
+        }
+
+        // 問題の表示
+        function displayQuestion() {
+            const q = questions[currentQuestionIndex];
             
-            // 選択肢ボタンをクリアして再生成
+            // 問題タイトルとテキストの更新
+            quizTitle.textContent = `第 ${currentQuestionIndex + 1} 問`;
+            questionText.innerHTML = q.text; 
+            
+            // 選択肢ボタンの生成
             choicesContainer.innerHTML = '';
             
-            // 選択肢の配列をシャッフル（毎回ランダムな順序にする場合、今回は固定でOK）
-            currentQuestion.choices.forEach(choice => {
-                const button = document.createElement('button');
-                button.innerHTML = choice.text;
-                // クリック時にスコアを加算して次の問題へ
-                button.onclick = () => handleAnswer(choice.points);
-                choicesContainer.appendChild(button);
-            });
+            // アニメーションのために一度非表示にしてからフェードイン
+            quizScreen.classList.remove('fade-in', 'fade-out');
+            void quizScreen.offsetWidth; // リフローを強制してアニメーションを再トリガー
+            quizScreen.classList.add('fade-in');
 
-            // フェードインアニメーション
-            quizArea.className = 'fade-in';
+            q.choices.forEach(choice => {
+                const btn = document.createElement('button');
+                btn.className = 'neon-btn';
+                btn.innerHTML = choice.text;
+                btn.onclick = () => handleAnswer(choice.score);
+                choicesContainer.appendChild(btn);
+            });
         }
 
-        // --- 回答時の処理 ---
-        function handleAnswer(points) {
-            // スコアを加算
-            totalScore += points;
+        // 回答時の処理
+        function handleAnswer(score) {
+            totalScore += score;
+            currentQuestionIndex++;
 
-            // フェードアウトアニメーションを適用
-            quizArea.className = 'fade-out';
+            // フェードアウト効果
+            quizScreen.classList.remove('fade-in');
+            quizScreen.classList.add('fade-out');
 
-            // アニメーションが終わるのを待ってから次の処理へ（300ms）
             setTimeout(() => {
-                currentQuestionIndex++;
-                
-                // まだ問題があるかチェック
                 if (currentQuestionIndex < questions.length) {
-                    showQuestion();
+                    // 次の問題へ
+                    displayQuestion();
                 } else {
+                    // 全問終了、結果表示へ
                     showResult();
                 }
-            }, 300);
+            }, 400);
         }
 
-        // --- 結果の表示 ---
+        // 結果の表示
         function showResult() {
-            quizArea.style.display = 'none'; // クイズエリアを非表示
-            resultArea.style.display = 'block'; // 結果エリアを表示
-            
-            // 結果表示のためのフェードイン
-            resultArea.className = 'fade-in';
+            quizScreen.classList.add('hidden');
+            resultScreen.classList.remove('hidden', 'fade-out');
+            resultScreen.classList.add('fade-in');
 
-            let resultTitle = "";
-            let resultComment = "";
-            let titleColor = "";
+            let title = "";
+            let comment = "";
 
-            // スコアに応じて判定
+            // 点数に応じた結果判定とスタイリング
             if (totalScore <= 1) {
-                resultTitle = "ほぼ素面です🍺";
-                resultComment = "素晴らしい！まだまだ飲めますね。<br>でも無理は禁物ですよ！";
-                titleColor = "#00f3ff"; // シアン
+                title = "ほぼ素面です🍺";
+                comment = "まだまだいけますね！<br>冷静な判断力が保たれています。";
+                resultTitle.style.color = "#08f7fe";
+                resultTitle.style.textShadow = "0 0 10px #08f7fe, 0 0 20px #08f7fe";
             } else if (totalScore <= 3) {
-                resultTitle = "ほんのり酔ってます🥂";
-                resultComment = "いい感じにリラックスしてますね！<br>足元には気をつけてください。";
-                titleColor = "#ffea00"; // イエロー
+                title = "ほんのり酔ってます🥂";
+                comment = "いい感じに楽しくなってきている頃合いですね。<br>足元には気をつけて！";
+                resultTitle.style.color = "#f5d300"; // ネオンイエロー
+                resultTitle.style.textShadow = "0 0 10px #f5d300, 0 0 20px #f5d300";
             } else {
-                resultTitle = "かなり酔ってます🍷";
-                resultComment = "限界突破してます！！<br>今すぐお水を飲んで、大人しく寝ましょう！";
-                titleColor = "#ff0055"; // ピンク
+                title = "かなり酔ってます🍷";
+                comment = "水飲んでください！！！🚰<br>今日はもうお酒ストップでお願いします🙇‍♂️";
+                resultTitle.style.color = "#ff2e93"; // ネオンピンク
+                resultTitle.style.textShadow = "0 0 10px #ff2e93, 0 0 20px #ff2e93, 0 0 40px #ff2e93";
             }
 
-            // タイトルの色を動的に変更
-            resultTitleElement.style.color = titleColor;
-            resultTitleElement.style.textShadow = `0 0 10px ${titleColor}, 0 0 20px ${titleColor}`;
-            
-            resultTitleElement.innerHTML = resultTitle;
-            resultCommentElement.innerHTML = resultComment;
+            resultTitle.innerHTML = title;
+            resultComment.innerHTML = comment;
         }
 
-        // --- リセット処理 ---
+        // クイズをリセット
         function resetQuiz() {
-            // フェードアウト
-            resultArea.className = 'fade-out';
-            
-            setTimeout(() => {
-                // 変数を初期化
-                currentQuestionIndex = 0;
-                totalScore = 0;
-                
-                // 表示の切り替え
-                resultArea.style.display = 'none';
-                quizArea.style.display = 'block';
-                
-                // 最初の問題を表示
-                showQuestion();
-            }, 300);
+            switchScreen(resultScreen, startScreen);
         }
-
-        // 初回実行（最初の問題を表示）
-        window.onload = showQuestion;
-
     </script>
 </body>
 </html>
